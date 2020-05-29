@@ -46,16 +46,16 @@ import sys
 
 
 def echo_server(host, port):
-    print "=========================="
-    print "TCP Secure Server"
-    print "=========================="
+    print ("==========================")
+    print ("TCP Secure Server")
+    print ("==========================")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     try:
         s.bind((host, port))
         s.listen(1)
-    except socket.error, msg:
-        print "ERROR: ", msg
+    except socket.error:
+        print ("ERROR: ")
         s.close()
         s = None
 
@@ -63,7 +63,7 @@ def echo_server(host, port):
         sys.exit(1)
 
     while 1:
-        print "Listening on: %s:%d"%(host, port)
+        print ("Listening on: "+ host +" :"+ str(port))
         data_len = 0
         try:
             conn, addr = s.accept()
@@ -72,22 +72,22 @@ def echo_server(host, port):
                                  certfile="server.crt",
                                  keyfile="server.key")
         except KeyboardInterrupt:
-            print "Closing Connection"
+            print ("Closing Connection")
             s.close()
             s = None
             sys.exit(1)
 
-        print 'Incoming connection accepted: ', addr
+        print ('Incoming connection accepted: ', addr)
 
         try:
             while 1:
                 data = connstream.read()
                 if not data: break
-                print time.strftime("%b %d %H:%M:%S ", time.localtime()), addr[0], ":", repr(data)
-                print ""
+                print (time.strftime("%b %d %H:%M:%S ", time.localtime()), addr[0], ":", repr(data))
+                print ("")
                 
         except KeyboardInterrupt:
-            print "Closing Connection"
+            print ("Closing Connection")
             s.close()
             s = None
             sys.exit(1)
@@ -95,6 +95,8 @@ def echo_server(host, port):
         conn.close()
 
 if __name__ == '__main__':
+    
+    
     parser = optparse.OptionParser()
     parser.add_option("-p", "--port", dest="port", type="int", default=50007, help="Port to listen on [default: %default].")
     parser.add_option("--hostname", dest="hostname", default="", help="Hostname to listen on.")
