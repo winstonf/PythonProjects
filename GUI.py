@@ -26,10 +26,16 @@ class MainWindow:
         def buttonClick(self):
                 self.text_area.insert(INSERT, self.TBox.get())
 
+q = queue.Queue()
 
 root = Tk()
 ui = MainWindow(root)
+Serv = TCP_Server('',50007,q)
+Serv.TCP_Server_Start()
+TCP_Tx_Thread = threading.Thread(target=Serv.TCP_Tx)
+TCP_Tx_Thread.start()
+TCP_Rx_Thread = threading.Thread(target=Serv.TCP_Rx)
+TCP_Rx_Thread.start()
 root.mainloop()
-
 
 
