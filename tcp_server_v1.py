@@ -6,7 +6,7 @@ import threading as Th
 
 
 class TCP_Server:
-    def __init__(self, host, port, que):
+    def __init__(self, host, port):
         
         self.serv_port = port
         self.serv_host = host 
@@ -15,7 +15,7 @@ class TCP_Server:
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
-    def TCP_Server_Start(self):   
+    def TCP_Server_Start(self,que):   
         
         try:
             self.s.bind((self.serv_host, self.serv_port))
@@ -26,16 +26,18 @@ class TCP_Server:
             self.s = None
 
         if self.s is None:
+            # que.put("Socket Error")
             sys.exit(1)
 
         while 1:
             print("Listening on: %s:%d"%(self.serv_host, self.serv_port))
+            # txt = "Listening on: "+ str(self.serv_host) + "Port: " + str(self.serv_port)
+            # que.put(txt)
             self.data_len = 0
             try:
                 self.conn, self.addr = self.s.accept()
-                print("Start Rx Thread")
-                # Rx_Thread = Th.Thread(target= self.TCP_Rx)
-                # Rx_Thread.start()
+                print("Connection Accepted")
+                # que.put_nowait("Socket Connected")
                 break
                 
             except KeyboardInterrupt:
